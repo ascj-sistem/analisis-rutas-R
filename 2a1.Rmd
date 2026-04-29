@@ -1,0 +1,104 @@
+---
+title: "Dilema de los tres caminos"
+output: html_notebook
+Author: ascj
+---
+
+
+```{r}
+# O dilema dos três caminhos
+
+# Crear los ensayos
+ensaio = seq(1,31,1)
+ensaio  # Runs in console
+
+tempo = c(18.3,18.9,10.9,20.7,11.4,22.9,12.1,12.8,13.3,
+          10.9,13.1,12.7,20.6,18.9,11.0,10.3,13.0,18.6,
+          13.0,10.6,10.4,21.5,10.9,10.9,11.0,19.1,16.1,
+          12.1,18.1,12.2,19.2)
+
+tempo # Runs in console
+
+plot(ensaio, tempo,    # Todos los tiempos 
+     ylab="Tiempo (min)", # Etiqueta Y
+     xlab="Ensayo",         # Etiqueta x
+     ylim=c(5,25))            # Limites, 5 a 25 m 
+
+# -- route separation ---- 
+# Route A
+xA = seq(1,6,1) # Sol , lluvia, transitado, 1era parada
+PERCURSOA = c(12.8,13.3,13.1,12.7,13.0,13.0)
+
+# Route B
+xB = seq(7,19,1) # Sombra, autopista, camino diagonal, 3era parada
+PERCURSOB = c(10.9,11.4,12.1,10.9,11.0,10.3,10.6,10.4,10.9,10.9,11.0,12.1,12.2)
+
+# Route C
+xC = seq(20,31,1) # Sombra, seguro, agradable, 16 parada
+PERCURSOC = c(18.3,18.9,20.7,22.9,20.6,18.9,18.6,21.5,19.1,16.1,18.1,19.2)
+
+# --- Graphy by routes
+plot(xA, PERCURSOA,
+     xlab  = "Ensayo",
+     ylab  = "Tiempo (min)",
+     main  = "Datos del experimento estratificados",
+     xlim  = c(0, 32),
+     ylim  = c(5, 25),
+     col   = "red")     # Camino A → rojo
+
+# Agregamos el camino B en NEGRO (por defecto)
+lines(xB, PERCURSOB, type = "p")
+
+# Agregamos el camino C en AZUL
+lines(xC, PERCURSOC, type = "p", col = "blue")
+
+legend("topleft",
+       legend=c("A","B","C"),
+       text.col =c("red", "black", "blue"),
+       inset=0.02,
+        pch=1)      # plotting character
+
+# --- Prueba t _ A vs B
+t.test(PERCURSOA,PERCURSOB)   # Runs in console
+
+# --- Desviacion Estandar Conjunta-Combinada
+#  --- (17 grados de libertad)
+
+VAR = ((6-1)*var(PERCURSOA) + (13-1)*var(PERCURSOB)) / ((6-1)+(13-1))
+VAR      # Runs in console
+
+desvio = sqrt(VAR)
+desvio     # Runs in console
+
+# --- as médias e os desvios para cada percurso/Route
+MEDIA.A= mean(PERCURSOA)
+MEDIA.A
+## [1] 12.98333
+SD.A= sd(PERCURSOA)
+SD.A
+## [1] 0.2136976
+MEDIA.B = mean(PERCURSOB)
+MEDIA.B
+## [1] 11.13077
+SD.B= sd(PERCURSOB)
+SD.B
+## [1] 0.6355898
+MEDIA.C = mean(PERCURSOC)
+MEDIA.C
+## [1] 19.40833
+SD.C= sd(PERCURSOC)
+SD.C
+## [1] 1.779917
+
+# Construimos la tabla resumen como un data frame
+resumen <- data.frame(
+  Camino         = c("A", "B", "C"),
+  Ensayos        = c(6, 13, 12),
+  Media_min      = c(round(MEDIA.A, 2), round(MEDIA.B, 2), round(MEDIA.C, 2)),
+  Desv_Estandar  = c(round(SD.A, 4),   round(SD.B, 4),   round(SD.C, 4))
+)
+resumen
+
+
+
+```
